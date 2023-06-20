@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  test-db:
+    container_name: test-db
+    image: mysql:8.0.33
+    command: --default-authentication-plugin=mysql_native_password
+    stdin_open: false
+    tty: false
+    ports:
+      - ${MYSQL_TCP_PORT}:${MYSQL_TCP_PORT}
+    env_file: .env
+    volumes:
+      - db-data-volume:/var/lib/mysql
+      - ./scripts:/scripts
+    networks:
+      - test-db-net
+
+networks:
+  test-db-net:
+  
+volumes:
+  db-data-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${MYSQL_DATAFILES_DIR}
